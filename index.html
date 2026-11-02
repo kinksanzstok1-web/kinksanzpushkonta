@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kink Sanz | PushKontak</title>
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}body{margin:0;background:#06182b;color:#fff;padding:18px}
+.wrap{max-width:680px;margin:auto}.head{text-align:center;margin:10px 0 18px}.logo{font-size:30px;font-weight:900}.logo span{color:#00d9ff}.sub{color:#9edff0}
+.card{background:#0a2239;border:1px solid #164a69;border-radius:18px;padding:18px;margin:12px 0}
+label{display:block;font-weight:700;margin:10px 0 7px}textarea,input{width:100%;padding:12px;border-radius:11px;border:1px solid #245778;background:#041423;color:#fff;outline:0}
+textarea{min-height:170px;resize:vertical}.row{display:flex;gap:9px;margin-top:12px}button{flex:1;padding:12px;border:0;border-radius:11px;color:#fff;font-weight:800;cursor:pointer}
+.start{background:#079b68}.pause{background:#52687a}.stop{background:#d63d3d}.save{background:#168bc0}
+button:disabled{opacity:.45;cursor:not-allowed}.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.box{background:#041a2d;padding:12px;border-radius:11px;text-align:center}.box b{display:block;color:#00d9ff;font-size:21px}.status{text-align:center;background:#041a2d;border-radius:11px;padding:13px;margin:12px 0;color:#76e6ff;font-weight:800}
+.timer{text-align:center;font-size:42px;font-weight:900;color:#00d9ff}.current{text-align:center;min-height:22px;color:#c7d9e5}.log{max-height:280px;overflow:auto}.item{padding:9px 0;border-bottom:1px solid #17384f;font-size:13px}
+.ok{color:#4dffad}.warn{color:#ffd45b}.bad{color:#ff7777}.muted{color:#8fa7b8;font-size:12px;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="head"><div class="logo">KINK <span>SANZ</span></div><div class="sub">PushKontak — FadeHost + WhatsApp Cloud API</div></div>
+<div class="card">
+<label>Nomor WhatsApp — satu per baris</label>
+<textarea id="numbers" placeholder="628xxxxxxxxxx&#10;628xxxxxxxxxx"></textarea>
+<label>Nama template WhatsApp</label>
+<input id="template" placeholder="contoh: promo_japost">
+<label>Bahasa template</label>
+<input id="language" value="id">
+<div class="muted">Gunakan hanya nomor yang sudah memberikan izin menerima pesan. Untuk pesan bisnis yang dimulai dari pihak bisnis, gunakan template WhatsApp yang sudah disetujui.</div>
+<div class="row"><button class="save" onclick="save()">SIMPAN</button></div>
+</div>
+<div class="card">
+<div class="stat"><div class="box"><b id="total">0</b><small>Total</small></div><div class="box"><b id="sent">0</b><small>Terkirim</small></div><div class="box"><b id="left">0</b><small>Sisa</small></div></div>
+<div class="status" id="status">SIAP</div><div class="timer" id="timer">00:00</div><div class="current" id="current">Belum mulai</div>
+<div class="row"><button class="start" id="start" onclick="start()">MULAI</button><button class="pause" id="pause" onclick="pause()" disabled>PAUSE</button><button class="stop" id="stop" onclick="stop()" disabled>STOP</button></div>
+</div>
+<div class="card"><b>Log</b><div class="log" id="log"></div></div>
+</div>
+<script>
+const API="/api/pushkontak",MIN=60,MAX=90,BATCH=30,BREAK=3600;
+let list=[],i=0,batch=0,running=false,paused=false,timer=0,tick=null;
+const $=id=>document.getElementById(id);
+function nums(){return[...new Set($("numbers").value.split(/\n+/).map(x=>x.trim().replace(/^\+/,"")).filter(Boolean))]}
+function save(){localStorage.setItem("ks_push",JSON.stringify({n:$("numbers").value,t:$("template").value,l:$("language").value}));log("Data tersimpan","ok")}
+function load(){try{let x=JSON.parse(localStorage.getItem("ks_push"));if(x){$("numbers").value=x.n||"";$("template").value=x.t||"";$("language").value=x.l||"id"}}catch(e){}}
+function log(t,c=""){let d=document.createElement("div");d.className="item "+c;d.textContent="["+new Date().toLocaleTimeString("id-ID")+"] "+t;$("log").prepend(d)}
+function stats(){$("total").textContent=list.length;$("sent").textContent=i;$("left").textContent=Math.max(0,list.length-i)}
+function fmt(s){let h=Math.floor(s/3600),m=Math.floor(s%3600/60),x=s%60;return h?`${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(x).padStart(2,"0")}`:`${String(m).padStart(2,"0")}:${String(x).padStart(2,"0")}`}
+function setTimer(s){timer=s;$("timer").textContent=fmt(Math.max(0,s))}
+function stopTick(){if(tick){clearInterval(tick);tick=null}}
+function countdown(sec,done){stopTick();setTimer(sec);tick=setInterval(()=>{if(!running||paused)return;setTimer(--timer);if(timer<=0){stopTick();done()}},1000)}
+function delay(){return Math.floor(Math.random()*(MAX-MIN+1))+MIN}
+async function start(){
+ if(!running){list=nums();if(!list.length)return alert("Masukkan nomor dulu.");if(!$("template").value.trim())return alert("Isi nama template WhatsApp dulu.");i=0;batch=0;running=true;paused=false;$("start").disabled=true;$("pause").disabled=false;$("stop").disabled=false;stats();log("Queue dimulai. Maksimal 30 kontak per batch.","ok")}
+ next()
+}
+function next(){
+ if(!running||paused)return;if(i>=list.length)return finish();if(batch>=BATCH)return rest();
+ let n=list[i],d=delay();$("current").textContent=`${n} • kontak ${i+1}/${list.length}`;$("status").textContent=`MENUNGGU ${fmt(d)}`;log(`${n} — jeda acak ${d} detik`,"warn");
+ countdown(d,send)
+}
+async function send(){
+ if(!running||paused)return;let n=list[i];$("status").textContent="MENGIRIM...";
+ try{
+  let r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({to:n,template:$("template").value.trim(),language:$("language").value.trim()||"id"})});
+  let data=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(data.error||"Gagal mengirim");
+  i++;batch++;stats();log(`${n} berhasil diproses`,"ok");
+ }catch(e){
+  i++;batch++;stats();log(`${n} gagal: ${e.message}`,"bad");
+ }
+ if(i>=list.length)return finish();if(batch>=BATCH)return rest();next()
+}
+function rest(){stopTick();batch=0;$("status").textContent="ISTIRAHAT 1 JAM";$("current").textContent="30 kontak selesai. Cooldown 1 jam.";log("30 kontak selesai. Mulai cooldown 1 jam.","warn");countdown(BREAK,()=>{if(!running||paused)return;log("Cooldown selesai. Batch berikutnya dimulai.","ok");next()})}
+function pause(){if(!running)return;paused=!paused;$("pause").textContent=paused?"LANJUT":"PAUSE";$("status").textContent=paused?"PAUSED":"MELANJUTKAN";log(paused?"Queue dijeda":"Queue dilanjutkan",paused?"warn":"ok");if(!paused)next()}
+function stop(){running=false;paused=false;stopTick();$("start").disabled=false;$("pause").disabled=true;$("stop").disabled=true;$("pause").textContent="PAUSE";$("status").textContent="STOPPED";$("current").textContent="Queue dihentikan";setTimer(0);log("Queue dihentikan","bad")}
+function finish(){running=false;paused=false;stopTick();$("start").disabled=false;$("pause").disabled=true;$("stop").disabled=true;$("status").textContent="SELESAI ✓";$("current").textContent="Semua kontak selesai.";setTimer(0);log("Semua kontak selesai","ok")}
+load();list=nums();stats();$("numbers").addEventListener("input",()=>{list=nums();stats()});
+</script>
+</body>
+</html>
