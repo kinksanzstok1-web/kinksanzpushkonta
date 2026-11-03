@@ -1,29 +1,29 @@
-# Kink Sanz PushKontak QR Queue V2
+# Kink Sanz PushKontak QR — FadeHost
 
-Root files:
+Versi ini memakai QR WhatsApp untuk menyambungkan sesi WhatsApp ke server.
+
+## File
 - index.html
 - server.js
 - package.json
-- README.md
 
-FadeHost:
-- WhatsApp bot
-- GitHub repository
-- Start command: npm start
+## FadeHost
+- Hosting: WhatsApp bot
+- Source: GitHub repository
+- Start command: `npm start`
 - Build command: kosong
-- Language: Node.js
-- Environment variables: kosong
+- Branch: default
+- Language: Node.js / Detect it
 
-Fitur:
-- QR WhatsApp.
-- Status CONNECTED.
-- Tombol PUTUS HUBUNGAN untuk logout dan menghapus sesi.
-- Setelah putus, QR baru akan muncul.
-- Tombol MUNCULKAN QR.
-- Banyak nomor satu per baris.
-- Antrian.
-- Pengiriman satu per satu manual.
-- Jeda acak 60–90 detik setelah berhasil.
-- Setelah 30 pesan berhasil, cooldown 1 jam.
+Tidak perlu:
+- WA_TOKEN
+- WA_PHONE_NUMBER_ID
+- META_APP_SECRET
 
+Setelah deploy, buka URL aplikasi FadeHost. QR akan muncul jika sesi belum tersambung.
+
+## Catatan penting
+Fitur kirim dibuat satu-per-satu dari dashboard, bukan pengiriman massal otomatis.
 Gunakan hanya untuk penerima yang sudah memberikan opt-in.
+
+Jangan memasukkan credential rahasia ke GitHub.

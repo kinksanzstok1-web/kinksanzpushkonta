@@ -6,356 +6,114 @@
 <title>Kink Sanz | PushKontak QR</title>
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;
- min-height:100vh;
- font-family:Inter,Arial,sans-serif;
- color:#eef8ff;
- background:
- radial-gradient(circle at 15% 5%,#0d74bd55,transparent 30%),
- radial-gradient(circle at 90% 20%,#00c8ff22,transparent 30%),
- linear-gradient(145deg,#030b18,#061a35 55%,#03101f);
-}
-.wrap{max-width:780px;margin:auto;padding:18px}
-.top{
- padding:20px;
- border:1px solid #1b6ca3;
- border-radius:22px;
- background:linear-gradient(135deg,#0b2b4de8,#07182ee8);
- box-shadow:0 18px 50px #0007;
-}
-.brand{display:flex;align-items:center;gap:13px}
-.logo{
- width:54px;height:54px;border-radius:16px;
- display:grid;place-items:center;
- font-weight:1000;color:#04111f;
- background:linear-gradient(135deg,#72dcff,#159ee8);
- box-shadow:0 0 25px #15bfff55;
-}
-h1{margin:0;font-size:25px}
-.sub{margin-top:4px;color:#8fb1ce;font-size:13px}
-.badge{
- margin-left:auto;padding:7px 10px;border-radius:99px;
- font-size:11px;font-weight:900;background:#0b3556;color:#9fdcff;
-}
-.card{
- margin-top:14px;padding:17px;
- border:1px solid #174d78;
- border-radius:20px;
- background:#071a32e8;
- box-shadow:0 14px 40px #0005;
-}
-.section-title{font-size:15px;font-weight:900;margin-bottom:12px}
-.status-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.status{
- display:flex;align-items:center;gap:8px;
- font-weight:900;font-size:13px;
-}
-.dot{width:9px;height:9px;border-radius:50%;background:#ffd166;box-shadow:0 0 12px #ffd166}
-.dot.ok{background:#4ff0a0;box-shadow:0 0 12px #4ff0a0}
-.dot.bad{background:#ff6464;box-shadow:0 0 12px #ff6464}
-.actions{display:flex;gap:8px}
-.btn{
- border:0;border-radius:11px;padding:11px 14px;
- font-weight:900;color:#fff;cursor:pointer;
- background:#128fd8;
-}
-.btn.secondary{background:#123a5c}
-.btn.danger{background:#a72e3c}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.qr{
- display:none;
- margin:14px auto 4px;
- width:max-content;
- padding:12px;
- border-radius:18px;
- background:#fff;
- box-shadow:0 0 35px #18bfff33;
-}
-.qr img{display:block;width:260px;max-width:65vw}
-.qr-hint{text-align:center;color:#8fb1ce;font-size:12px;line-height:1.5}
-label{display:block;margin:13px 0 7px;font-size:13px;font-weight:900;color:#cfeaff}
-textarea{
- width:100%;min-height:112px;resize:vertical;
- padding:13px;border-radius:13px;
- border:1px solid #245a86;
- outline:none;background:#04152a;color:#fff;
- font-size:14px;
-}
-.check{
- display:flex;align-items:flex-start;gap:8px;
- margin-top:12px;color:#a9c7df;font-size:12px;line-height:1.45;
-}
-.check input{margin-top:3px}
-.primary{width:100%;margin-top:12px}
-.stats{
- display:grid;grid-template-columns:repeat(3,1fr);
- gap:8px;margin-top:12px;
-}
-.stat{
- padding:12px;border-radius:13px;
- background:#04162b;border:1px solid #174568;text-align:center;
-}
-.stat b{display:block;font-size:18px;color:#5ed3ff}
-.stat span{font-size:10px;color:#7898b5}
-.queue{display:grid;gap:8px;margin-top:12px}
-.item{
- display:flex;align-items:center;justify-content:space-between;gap:10px;
- padding:11px;border-radius:13px;
- border:1px solid #174568;background:#04162b;
-}
-.item-main b{font-size:13px}.small{font-size:10px;color:#7695b1;margin-top:3px}
-.item .btn{width:auto;padding:9px 11px;font-size:11px}
-.timer{text-align:center;color:#5ed3ff;font-weight:1000;margin:13px 0;font-size:19px}
-.note{color:#86a9c5;font-size:11px;line-height:1.55;margin-top:10px}
-@media(max-width:520px){
- .actions{flex-direction:column}.actions .btn{width:100%}
- .badge{display:none}.stats{gap:5px}
-}
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(160deg,#06152f,#082b58,#04101f);color:#fff;min-height:100vh}
+.wrap{max-width:720px;margin:auto;padding:22px}
+.card{background:rgba(10,28,54,.88);border:1px solid #174a83;border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 10px 30px #0005}
+h1{margin:0 0 5px;color:#5ecbff}.sub{color:#9bb7d4}
+label{display:block;margin:14px 0 7px;color:#cfe5ff;font-weight:700}
+input,textarea{width:100%;border:1px solid #24598e;background:#071b34;color:#fff;border-radius:12px;padding:13px;font-size:15px}
+textarea{min-height:120px;resize:vertical}
+button{width:100%;border:0;border-radius:12px;padding:13px;margin-top:12px;font-weight:800;font-size:15px;cursor:pointer;background:#1198e8;color:#fff}
+button:disabled{opacity:.45}
+.qr{display:flex;justify-content:center;padding:12px}.qr img{width:260px;max-width:100%;background:#fff;padding:10px;border-radius:12px}
+.status{font-weight:800}.ok{color:#62e6a4}.warn{color:#ffd166}.bad{color:#ff7474}
+.notice{font-size:13px;color:#aac3dc;line-height:1.5}
+.check{display:flex;gap:9px;align-items:flex-start;margin-top:12px;color:#d9eaff;font-size:13px}.check input{width:auto;margin-top:3px}
+.log{font-family:monospace;font-size:12px;white-space:pre-wrap;color:#b9d4ed}
 </style>
 </head>
 <body>
 <div class="wrap">
-
- <div class="top">
-  <div class="brand">
-   <div class="logo">KS</div>
-   <div>
+  <div class="card">
     <h1>KINK SANZ</h1>
-    <div class="sub">PushKontak • WhatsApp QR</div>
-   </div>
-   <div class="badge">FADEHOST</div>
-  </div>
- </div>
-
- <div class="card">
-  <div class="status-row">
-   <div class="status">
-    <span id="dot" class="dot"></span>
-    <span id="status">MEMUAT...</span>
-   </div>
-   <div class="actions">
-    <button id="reconnect" class="btn secondary" onclick="reconnect()">MUNCULKAN QR</button>
-    <button id="disconnect" class="btn danger" onclick="disconnectWA()" disabled>PUTUS HUBUNGAN</button>
-   </div>
+    <div class="sub">PushKontak — QR WhatsApp</div>
   </div>
 
-  <div id="qr" class="qr"></div>
-  <div id="qrHint" class="qr-hint"></div>
- </div>
-
- <div class="card">
-  <div class="section-title">Buat Antrian PushKontak</div>
-
-  <label>Nomor WhatsApp — satu per baris</label>
-  <textarea id="nums" placeholder="628123456789&#10;628987654321&#10;628555555555"></textarea>
-
-  <label>Pesan</label>
-  <textarea id="msg" placeholder="Tulis pesan yang mau dikirim..."></textarea>
-
-  <label class="check">
-   <input id="optin" type="checkbox">
-   <span>Saya memastikan semua nomor di daftar sudah memberikan izin menerima pesan.</span>
-  </label>
-
-  <button id="load" class="btn primary" onclick="loadQueue()">MASUKKAN KE ANTRIAN</button>
-
-  <div class="stats">
-   <div class="stat"><b id="total">0</b><span>TOTAL</span></div>
-   <div class="stat"><b id="sent">0</b><span>TERKIRIM</span></div>
-   <div class="stat"><b id="left">0</b><span>SISA</span></div>
+  <div class="card">
+    <div>Status: <span id="status" class="status warn">Memuat...</span></div>
+    <div id="qrbox" class="qr"></div>
+    <div class="notice">
+      Scan QR menggunakan WhatsApp pada HP pengirim. Gunakan fitur ini hanya
+      untuk penerima yang memang sudah memberikan izin menerima pesan.
+    </div>
   </div>
 
-  <div id="timer" class="timer"></div>
-  <div id="queue" class="queue"></div>
+  <div class="card">
+    <label>Nomor WhatsApp</label>
+    <input id="number" placeholder="628xxxxxxxxxx">
 
-  <div class="note">
-   Pengiriman dilakukan satu per satu dari antrian. Setelah berhasil, sistem memberi
-   jeda acak 60–90 detik sebelum nomor berikutnya dapat dikirim. Setelah 30 pesan,
-   sistem istirahat 1 jam.
+    <label>Pesan</label>
+    <textarea id="message" placeholder="Tulis pesan..."></textarea>
+
+    <label class="check">
+      <input type="checkbox" id="optin">
+      <span>Saya memastikan nomor ini sudah memberikan izin (opt-in) untuk menerima pesan.</span>
+    </label>
+
+    <button id="send" disabled>KIRIM PESAN</button>
+    <div id="result" class="notice"></div>
   </div>
- </div>
 
+  <div class="card">
+    <div class="log" id="log">Log siap.</div>
+  </div>
 </div>
 
 <script>
-const $=id=>document.getElementById(id);
-let q=[],busy=false,cool=false,timerId=null,remaining=0;
+const $ = id => document.getElementById(id);
 
-function render(){
- $("total").textContent=q.length;
- $("sent").textContent=q.filter(x=>x.sent).length;
- $("left").textContent=q.filter(x=>!x.sent).length;
+async function refresh(){
+  try{
+    const r = await fetch("/api/status");
+    const d = await r.json();
 
- const box=$("queue");box.innerHTML="";
- q.forEach((x,i)=>{
-  const item=document.createElement("div");
-  item.className="item";
+    $("send").disabled = d.status !== "connected";
 
-  const main=document.createElement("div");
-  main.className="item-main";
-  main.innerHTML=`<b>${i+1}. ${x.number}</b><div class="small">${x.sent?"✓ TERKIRIM":"MENUNGGU"}</div>`;
+    if(d.status === "connected"){
+      $("status").textContent = "TERSAMBUNG";
+      $("status").className = "status ok";
+      $("qrbox").innerHTML = "";
+    } else if(d.status === "scan_qr"){
+      $("status").textContent = "SCAN QR";
+      $("status").className = "status warn";
+      $("qrbox").innerHTML = d.qr ? `<img src="${d.qr}" alt="QR WhatsApp">` : "";
+    } else {
+      $("status").textContent = d.status.toUpperCase();
+      $("status").className = "status warn";
+    }
 
-  const btn=document.createElement("button");
-  btn.className="btn";
-  btn.textContent=x.sent?"TERKIRIM":"KIRIM";
-  btn.disabled=x.sent||busy||cool;
-  btn.onclick=()=>sendOne(i);
-
-  item.append(main,btn);
-  box.appendChild(item);
- });
-}
-
-function startDelay(sec,cb){
- clearInterval(timerId);
- remaining=sec;
- $("timer").textContent=`Jeda ${remaining} detik`;
- timerId=setInterval(()=>{
-  remaining--;
-  $("timer").textContent=remaining>0?`Jeda ${remaining} detik`:"";
-  if(remaining<=0){
-   clearInterval(timerId);
-   cb();
+    if(d.lastError) $("log").textContent = d.lastError;
+  }catch(e){
+    $("status").textContent = "SERVER ERROR";
+    $("status").className = "status bad";
   }
- },1000);
 }
 
-async function sendOne(i){
- if(!q[i]||q[i].sent)return;
-
- busy=true;render();
-
- try{
-  const r=await fetch("/api/send",{
-   method:"POST",
-   headers:{"Content-Type":"application/json"},
-   body:JSON.stringify({
-    number:q[i].number,
-    message:$("msg").value,
-    optInConfirmed:$("optin").checked
-   })
-  });
-
-  const d=await r.json();
-  if(!r.ok)throw new Error(d.error||"Gagal mengirim.");
-
-  q[i].sent=true;
-  render();
-
-  const sent=q.filter(x=>x.sent).length;
-
-  if(sent>0&&sent%30===0){
-   cool=true;
-   $("timer").textContent="ISTIRAHAT 1 JAM";
-   render();
-   setTimeout(()=>{
-    cool=false;
-    $("timer").textContent="";
-    busy=false;
-    render();
-   },3600000);
-   return;
+$("send").onclick = async () => {
+  $("send").disabled = true;
+  $("result").textContent = "Mengirim...";
+  try{
+    const r = await fetch("/api/send", {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        number:$("number").value,
+        message:$("message").value,
+        optInConfirmed:$("optin").checked
+      })
+    });
+    const d = await r.json();
+    if(!r.ok) throw new Error(d.error || "Gagal");
+    $("result").textContent = "Pesan berhasil dikirim.";
+    $("log").textContent = "Terkirim ke " + $("number").value;
+  }catch(e){
+    $("result").textContent = e.message;
   }
+  await refresh();
+};
 
-  if(q.some(x=>!x.sent)){
-   const delay=Math.floor(Math.random()*31)+60;
-   startDelay(delay,()=>{
-    busy=false;
-    render();
-   });
-   return;
-  }
-
- }catch(e){
-  alert(e.message);
- }
-
- busy=false;
- render();
-}
-
-function loadQueue(){
- if(!$("optin").checked){
-  alert("Centang konfirmasi opt-in dulu.");
-  return;
- }
-
- const nums=$("nums").value.split(/\n/)
-  .map(x=>x.replace(/\D/g,""))
-  .filter(x=>x.length>=8);
-
- if(!nums.length){
-  alert("Masukkan nomor yang valid.");
-  return;
- }
-
- q=nums.map(number=>({number,sent:false}));
- render();
-}
-
-async function disconnectWA(){
- if(!confirm("Putuskan WhatsApp dan hapus sesi login? Setelah ini QR baru akan muncul."))return;
-
- $("disconnect").disabled=true;
-
- try{
-  const r=await fetch("/api/disconnect",{
-   method:"POST",
-   headers:{"Content-Type":"application/json"}
-  });
-  const d=await r.json();
-  if(!r.ok)throw new Error(d.error||"Gagal memutuskan.");
- }catch(e){
-  alert(e.message);
- }
-
- refreshStatus();
-}
-
-async function reconnect(){
- $("reconnect").disabled=true;
- try{
-  await fetch("/api/reconnect",{method:"POST"});
- }catch(e){}
- setTimeout(()=>$("reconnect").disabled=false,1500);
-}
-
-async function refreshStatus(){
- try{
-  const d=await(await fetch("/api/status")).json();
-
-  $("status").textContent=d.status.toUpperCase();
-
-  if(d.status==="connected"){
-   $("dot").className="dot ok";
-   $("qr").style.display="none";
-   $("qrHint").textContent="WhatsApp tersambung.";
-   $("disconnect").disabled=false;
-   $("reconnect").disabled=true;
-  }else if(d.status==="scan_qr"){
-   $("dot").className="dot";
-   $("qr").style.display="block";
-   $("qr").innerHTML=d.qr?`<img src="${d.qr}" alt="QR WhatsApp">`:"";
-   $("qrHint").textContent="Scan QR ini menggunakan WhatsApp di HP lu.";
-   $("disconnect").disabled=true;
-   $("reconnect").disabled=true;
-  }else{
-   $("dot").className="dot";
-   $("qr").style.display="none";
-   $("qrHint").textContent="WhatsApp belum tersambung.";
-   $("disconnect").disabled=true;
-   $("reconnect").disabled=false;
-  }
- }catch(e){
-  $("status").textContent="SERVER ERROR";
-  $("dot").className="dot bad";
- }
-}
-
-refreshStatus();
-setInterval(refreshStatus,2500);
-render();
+refresh();
+setInterval(refresh,3000);
 </script>
 </body>
 </html>
