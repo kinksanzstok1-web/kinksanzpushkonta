@@ -1,5 +1,29 @@
-# Kink Sanz PushKontak QR Queue
-Root files: index.html, server.js, package.json, README.md.
-FadeHost: WhatsApp bot, GitHub repository, Start command `npm start`, Build kosong, Node.js, Environment Variables kosong.
-Fitur: banyak nomor satu per baris, masuk antrian, kirim tetap satu per satu manual; setelah kirim berhasil jeda acak 60–90 detik; setiap 30 pesan cooldown 1 jam. QR WhatsApp untuk menyambungkan sesi.
-Gunakan hanya untuk penerima yang sudah opt-in.
+# Kink Sanz PushKontak QR Queue V2
+
+Root files:
+- index.html
+- server.js
+- package.json
+- README.md
+
+FadeHost:
+- WhatsApp bot
+- GitHub repository
+- Start command: npm start
+- Build command: kosong
+- Language: Node.js
+- Environment variables: kosong
+
+Fitur:
+- QR WhatsApp.
+- Status CONNECTED.
+- Tombol PUTUS HUBUNGAN untuk logout dan menghapus sesi.
+- Setelah putus, QR baru akan muncul.
+- Tombol MUNCULKAN QR.
+- Banyak nomor satu per baris.
+- Antrian.
+- Pengiriman satu per satu manual.
+- Jeda acak 60–90 detik setelah berhasil.
+- Setelah 30 pesan berhasil, cooldown 1 jam.
+
+Gunakan hanya untuk penerima yang sudah memberikan opt-in.
