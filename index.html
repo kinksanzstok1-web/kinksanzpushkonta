@@ -1,119 +1,13 @@
-<!doctype html>
-<html lang="id">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Kink Sanz | PushKontak QR</title>
-<style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(160deg,#06152f,#082b58,#04101f);color:#fff;min-height:100vh}
-.wrap{max-width:720px;margin:auto;padding:22px}
-.card{background:rgba(10,28,54,.88);border:1px solid #174a83;border-radius:18px;padding:18px;margin:14px 0;box-shadow:0 10px 30px #0005}
-h1{margin:0 0 5px;color:#5ecbff}.sub{color:#9bb7d4}
-label{display:block;margin:14px 0 7px;color:#cfe5ff;font-weight:700}
-input,textarea{width:100%;border:1px solid #24598e;background:#071b34;color:#fff;border-radius:12px;padding:13px;font-size:15px}
-textarea{min-height:120px;resize:vertical}
-button{width:100%;border:0;border-radius:12px;padding:13px;margin-top:12px;font-weight:800;font-size:15px;cursor:pointer;background:#1198e8;color:#fff}
-button:disabled{opacity:.45}
-.qr{display:flex;justify-content:center;padding:12px}.qr img{width:260px;max-width:100%;background:#fff;padding:10px;border-radius:12px}
-.status{font-weight:800}.ok{color:#62e6a4}.warn{color:#ffd166}.bad{color:#ff7474}
-.notice{font-size:13px;color:#aac3dc;line-height:1.5}
-.check{display:flex;gap:9px;align-items:flex-start;margin-top:12px;color:#d9eaff;font-size:13px}.check input{width:auto;margin-top:3px}
-.log{font-family:monospace;font-size:12px;white-space:pre-wrap;color:#b9d4ed}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="card">
-    <h1>KINK SANZ</h1>
-    <div class="sub">PushKontak — QR WhatsApp</div>
-  </div>
-
-  <div class="card">
-    <div>Status: <span id="status" class="status warn">Memuat...</span></div>
-    <div id="qrbox" class="qr"></div>
-    <div class="notice">
-      Scan QR menggunakan WhatsApp pada HP pengirim. Gunakan fitur ini hanya
-      untuk penerima yang memang sudah memberikan izin menerima pesan.
-    </div>
-  </div>
-
-  <div class="card">
-    <label>Nomor WhatsApp</label>
-    <input id="number" placeholder="628xxxxxxxxxx">
-
-    <label>Pesan</label>
-    <textarea id="message" placeholder="Tulis pesan..."></textarea>
-
-    <label class="check">
-      <input type="checkbox" id="optin">
-      <span>Saya memastikan nomor ini sudah memberikan izin (opt-in) untuk menerima pesan.</span>
-    </label>
-
-    <button id="send" disabled>KIRIM PESAN</button>
-    <div id="result" class="notice"></div>
-  </div>
-
-  <div class="card">
-    <div class="log" id="log">Log siap.</div>
-  </div>
-</div>
-
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kink Sanz | PushKontak QR</title><style>
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(160deg,#06152f,#082b58,#04101f);color:#fff;font-family:Arial;padding:18px}.wrap{max-width:760px;margin:auto}.card{background:#0a1c36e8;border:1px solid #195085;border-radius:18px;padding:17px;margin:13px 0}h1{color:#5ecbff;margin:0}.sub,.note,.small{color:#a9c2db}label{display:block;margin:12px 0 7px;font-weight:700}textarea{width:100%;min-height:120px;background:#071a32;border:1px solid #285b8c;border-radius:11px;color:#fff;padding:12px;font-size:15px}button{width:100%;border:0;border-radius:11px;padding:12px;margin-top:9px;background:#1098e8;color:#fff;font-weight:800}button:disabled{opacity:.45}.qr{text-align:center}.qr img{max-width:260px;background:#fff;padding:8px;border-radius:12px}.item{background:#071a32;border:1px solid #1c4770;border-radius:11px;padding:10px;margin-top:8px}.timer{text-align:center;color:#5ecbff;font-size:20px;font-weight:800;margin:10px}.check{display:flex;gap:8px;font-size:13px;color:#d9eaff}.check input{width:auto}</style></head><body><div class="wrap">
+<div class="card"><h1>KINK SANZ</h1><div class="sub">PushKontak — QR Queue</div></div>
+<div class="card"><b>Status: <span id="st">MEMUAT</span></b><div id="qr" class="qr"></div><div class="note">Gunakan hanya untuk penerima yang sudah opt-in.</div></div>
+<div class="card"><label>Nomor WhatsApp — satu per baris</label><textarea id="nums" placeholder="628123456789&#10;628987654321"></textarea><label>Pesan</label><textarea id="msg" placeholder="Tulis pesan..."></textarea><label class="check"><input id="ok" type="checkbox"> Saya memastikan semua nomor sudah memberikan izin menerima pesan.</label><button id="load">MASUKKAN KE ANTRIAN</button><div id="stats" class="note"></div><div id="timer" class="timer"></div><div id="queue"></div></div></div>
 <script>
-const $ = id => document.getElementById(id);
-
-async function refresh(){
-  try{
-    const r = await fetch("/api/status");
-    const d = await r.json();
-
-    $("send").disabled = d.status !== "connected";
-
-    if(d.status === "connected"){
-      $("status").textContent = "TERSAMBUNG";
-      $("status").className = "status ok";
-      $("qrbox").innerHTML = "";
-    } else if(d.status === "scan_qr"){
-      $("status").textContent = "SCAN QR";
-      $("status").className = "status warn";
-      $("qrbox").innerHTML = d.qr ? `<img src="${d.qr}" alt="QR WhatsApp">` : "";
-    } else {
-      $("status").textContent = d.status.toUpperCase();
-      $("status").className = "status warn";
-    }
-
-    if(d.lastError) $("log").textContent = d.lastError;
-  }catch(e){
-    $("status").textContent = "SERVER ERROR";
-    $("status").className = "status bad";
-  }
-}
-
-$("send").onclick = async () => {
-  $("send").disabled = true;
-  $("result").textContent = "Mengirim...";
-  try{
-    const r = await fetch("/api/send", {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        number:$("number").value,
-        message:$("message").value,
-        optInConfirmed:$("optin").checked
-      })
-    });
-    const d = await r.json();
-    if(!r.ok) throw new Error(d.error || "Gagal");
-    $("result").textContent = "Pesan berhasil dikirim.";
-    $("log").textContent = "Terkirim ke " + $("number").value;
-  }catch(e){
-    $("result").textContent = e.message;
-  }
-  await refresh();
-};
-
-refresh();
-setInterval(refresh,3000);
-</script>
-</body>
-</html>
+const $=x=>document.getElementById(x);let q=[],busy=false,cool=false,timer;
+function render(){queue.innerHTML="";q.forEach((x,i)=>{let d=document.createElement("div");d.className="item";d.innerHTML=`<b>${i+1}. ${x.n}</b><div class="small">${x.sent?"TERKIRIM":"MENUNGGU"}</div>`;let b=document.createElement("button");b.textContent=x.sent?"SUDAH TERKIRIM":"KIRIM NOMOR INI";b.disabled=x.sent||busy||cool;b.onclick=()=>send(i);d.appendChild(b);queue.appendChild(d)});stats.textContent=`Total: ${q.length} | Terkirim: ${q.filter(x=>x.sent).length} | Sisa: ${q.filter(x=>!x.sent).length}`}
+function delay(s,cb){let t=s;timer=setInterval(()=>{timer.textContent=t>0?`Tunggu ${t} detik`:"";if(--t<0){clearInterval(timer);cb()}},1000)}
+async function send(i){if(!q[i]||q[i].sent)return;if(!$("ok").checked){alert("Centang konfirmasi opt-in.");return}busy=true;render();try{let r=await fetch("/api/send",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({number:q[i].n,message:$("msg").value,optInConfirmed:true})}),d=await r.json();if(!r.ok)throw Error(d.error);q[i].sent=true;render();let sent=q.filter(x=>x.sent).length;if(sent&&sent%30===0){cool=true;render();$("timer").textContent="ISTIRAHAT 1 JAM";setTimeout(()=>{cool=false;render()},3600000)}else if(q.some(x=>!x.sent)){let s=Math.floor(Math.random()*31)+60;delay(s,()=>{busy=false;render()});return}}catch(e){alert(e.message)}busy=false;render()}
+$("load").onclick=()=>{if(!$("ok").checked)return alert("Centang konfirmasi opt-in.");let a=$("nums").value.split(/\n/).map(x=>x.replace(/\D/g,"")).filter(x=>x.length>=8);if(!a.length)return alert("Nomor tidak valid.");q=a.map(n=>({n,sent:false}));render()};
+async function status(){try{let d=await(await fetch("/api/status")).json();$("st").textContent=d.status.toUpperCase();if(d.status==="scan_qr")$("qr").innerHTML=d.qr?`<img src="${d.qr}">`:"";else if(d.status==="connected")$("qr").innerHTML=""}catch{$("st").textContent="ERROR"}}status();setInterval(status,3000);render();
+</script></body></html>

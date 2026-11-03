@@ -1,5 +1,5 @@
 {
-  "name": "kinksanz-pushkontak-qr",
+  "name": "kinksanz-pushkontak-qr-queue",
   "version": "1.0.0",
   "private": true,
   "main": "server.js",
